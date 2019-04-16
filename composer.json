@@ -3,7 +3,7 @@
     "description": "View render engine for PHP",
     "keywords": ["template", "render", "view"],
     "license": "MIT",
-    "minimum-stability": "dev-master",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Akshay Jumbade",
