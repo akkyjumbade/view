@@ -4,6 +4,7 @@
     "keywords": ["template", "render", "view"],
     "license": "MIT",
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Akshay Jumbade",
