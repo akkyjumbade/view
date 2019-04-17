@@ -1,5 +1,6 @@
-<?php 
+<?php
 namespace Akkk\View;
+require __DIR__.'/config.php';
 use DOMDocument;
 
 class View {
@@ -8,25 +9,14 @@ class View {
     private $title = 'Missing title for view';
     private $scripts = [];
     private $styles = [];
-    private $meta = [
-        [
-            'name' => 'viewport',
-            'content' => 'width=device-width, initial-scale=1',
-        ],
-        [
-            'name' => 'theme-color',
-            'content' => '#000',
-        ],
-        [
-            'name' => 'application-name',
-            'content' => 'Application Name',
-        ],
-        [
-            'charset' => 'utf-8',
-        ],
-    ];
+    private $links = [];
+    private $meta = [];
 
     function __construct($viewPath = null) {
+        global $config;
+        $this->links = $config['links'];
+        $this->meta = $config['meta'];
+
         $this->dom = new DOMDocument('1.0', 'utf-8');
         $this->dom->formatOutput = true;
         if($viewPath) {
@@ -43,7 +33,7 @@ class View {
         ]);
         $this->dom->appendChild($rootEl);
         {
-            $headEl = $this->_el('head');        
+            $headEl = $this->_el('head');
             $rootEl->appendChild($headEl);
             $headEl->appendChild($this->_el('title', $this->title));
             $headEl->appendChild($this->_el('base', null, [
@@ -56,6 +46,13 @@ class View {
                 }
                 $styleEl = $this->_el('meta', null, $props);
                 $headEl->appendChild($styleEl);
+            }
+            foreach ($this->links as $key => $value) {
+                $linkEl = $this->_el('link', null, [
+                    'rel' => $value['rel'],
+                    'href' => $value['href'],
+                ]);
+                $headEl->appendChild($linkEl);
             }
             foreach ($this->styles as $key => $value) {
                 $styleEl = $this->_el('link', null, [
@@ -81,7 +78,7 @@ class View {
             }
         }
         $this->save();
-        return $this->dom;        
+        return $this->dom;
     }
     public function addStyle($style_path) {
         array_push($this->styles, $style_path);
@@ -92,6 +89,11 @@ class View {
         return $this;
     }
     public function meta($params) {
+        $isExist = \array_filter($this->meta, function ($item) use ($params) {
+            if(array_key_exists('name', $params) && array_key_exists('name', $item)) {
+                return $params['name'] == $item['name'];
+            }
+        });
         array_push($this->meta, $params);
         return $this;
     }
