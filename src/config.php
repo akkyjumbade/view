@@ -2,10 +2,6 @@
 return $config = [
     'links' => [
         [
-            'rel' => 'canonical',
-            'href' => '',
-        ],
-        [
             'rel' => 'manifest',
             'href' => '/manifest.webmanifest',
         ],
@@ -25,14 +21,6 @@ return $config = [
         ],
         [
             'name' => 'application-name',
-            'content' => 'Application Name',
-        ],
-        [
-            'name' => 'description',
-            'content' => 'Application description',
-        ],
-        [
-            'name' => 'keywords',
             'content' => '',
         ],
         [
@@ -67,20 +55,9 @@ return $config = [
             'http-equiv' => 'Expires',
             'content' => "0",
         ],
-        [
-            'http-equiv' => 'Content-Security-Policy',
-            'content' => "default-src 'self'",
-        ],
-        [
-            'name' => 'robots',
-            'content' => 'noindex,nofollow',
-        ],
-        [
-            'name' => 'googlebot',
-            'content' => 'noindex,nofollow',
-        ],
-        [
-            'charset' => 'utf-8',
-        ],
+        // [
+        //     'http-equiv' => 'Content-Security-Policy',
+        //     'content' => "default-src 'self'",
+        // ],
     ]
 ];
