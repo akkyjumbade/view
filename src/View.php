@@ -89,20 +89,24 @@ class View {
                     'googlebot' => 'noindex, nofollow',
                 ]);
             }
-            foreach ($this->meta as $key => $metaObj) {
-                $props = [];
-                foreach ($metaObj as $metaKey => $value) {
-                    $props[$metaKey] = $value;
+            if($this->meta) {
+                foreach ($this->meta as $key => $metaObj) {
+                    $props = [];
+                    foreach ($metaObj as $metaKey => $value) {
+                        $props[$metaKey] = $value;
+                    }
+                    $styleEl = $this->_el('meta', null, $props);
+                    $headEl->appendChild($styleEl);
                 }
-                $styleEl = $this->_el('meta', null, $props);
-                $headEl->appendChild($styleEl);
             }
-            foreach ($this->links as $key => $value) {
-                $linkEl = $this->_el('link', null, [
-                    'rel' => $value['rel'],
-                    'href' => $value['href'],
-                ]);
-                $headEl->appendChild($linkEl);
+            if($this->links) {
+                foreach ($this->links as $key => $value) {
+                    $linkEl = $this->_el('link', null, [
+                        'rel' => $value['rel'],
+                        'href' => $value['href'],
+                    ]);
+                    $headEl->appendChild($linkEl);
+                }
             }
             foreach ($this->styles as $key => $value) {
                 $styleEl = $this->_el('link', null, [
@@ -167,15 +171,21 @@ class View {
         return $this;
     }
     public function meta($params) {
-        $isExist = \array_filter($this->meta, function ($item) use ($params) {
-            if(array_key_exists('name', $params) && array_key_exists('name', $item)) {
-                return $params['name'] == $item['name'];
+        if($this->meta) {
+            $isExist = \array_filter($this->meta, function ($item) use ($params) {
+                if(array_key_exists('name', $params) && array_key_exists('name', $item)) {
+                    return $params['name'] == $item['name'];
+                }
+            });
+        }
+        if($params && count($params)) {
+            if(array_key_exists('name', $params) && property_exists($this, $params['name'])) {
+                throw new Exception("Property already exists", 1);
+            } else {
+                if($this->meta) {
+                    array_push($this->meta, $params);
+                }
             }
-        });
-        if(array_key_exists('name', $params) && property_exists($this, $params['name'])) {
-            throw new Exception("Property already exists", 1);
-        } else {
-            array_push($this->meta, $params);
         }
         return $this;
     }
