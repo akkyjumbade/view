@@ -149,8 +149,17 @@ class View {
             $bodyEl->appendChild($componentEl);
             $bodyEl->appendChild($this->dom->createComment('Root Component [ends here]'.PHP_EOL));
             if ($this->viewPath) {
-                $htmlFromFile = (@file_get_contents($this->viewPath));
-                $componentEl->appendChild($this->_el('main', $htmlFromFile));
+                try {
+                    // $htmlFromFile = (@include($this->viewPath));
+                    ob_start();
+                    include($this->viewPath);
+                    $htmlFromFile = ob_get_clean();
+                } catch (\Throwable $th) {
+                    throw $th;
+                } finally {
+                    $componentEl->appendChild($this->_el('main', $htmlFromFile));
+                }
+
             }
             foreach ($this->scripts as $key => $value) {
                 $scriptEl = $this->_el('script', null, [
